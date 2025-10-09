@@ -2,6 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: mi-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
   rules:
@@ -12,6 +15,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: mi-app-service
+            name: mi-app-service  # ← APUNTA AL SERVICE
             port:
               number: 80
