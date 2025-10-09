@@ -15,6 +15,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: olaff33/minuevaweb:1.0
+        image: olaff33/lanueva:latest
         ports:
         - containerPort: 80
+
