@@ -16,9 +16,10 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: olaff33/mi-web:1.0
+        image: olaff33/minuevaweb:1.0
         ports:
         - containerPort: 80
+
 
 
 
