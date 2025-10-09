@@ -16,9 +16,10 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: olaff33/mi-app:2.1
+        image: olaff33/mi-app:2.2
         ports:
         - containerPort: 80
+
 
 
 
