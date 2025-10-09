@@ -5,7 +5,6 @@ metadata:
   labels:
     app: mi-app
     environment: production
-    version: v1.0.0
 spec:
   replicas: 4
   strategy:
@@ -20,31 +19,24 @@ spec:
     metadata:
       labels:
         app: mi-app
-        version: v1.0.0
     spec:
       containers:
       - name: nginx
         image: nginx:alpine
         ports:
         - containerPort: 80
-        # Health Checks
         livenessProbe:
           httpGet:
             path: /
             port: 80
           initialDelaySeconds: 30
           periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
         readinessProbe:
           httpGet:
             path: /
             port: 80
           initialDelaySeconds: 5
           periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 1
-        # Recursos
         resources:
           requests:
             memory: "128Mi"
@@ -52,31 +44,16 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "200m"
-        # Seguridad
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 1000
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-        # Variables de entorno
-        env:
-        - name: NGINX_ENV
-          value: "production"
-        - name: DEPLOYMENT_NAME
-          value: "mi-app"
-        # Configuración de nginx
-        volumeMounts:
-        - name: nginx-config
-          mountPath: /etc/nginx/nginx.conf
-          subPath: nginx.conf
-          readOnly: true
-      # Volumen para configuración
-      volumes:
-      - name: nginx-config
-        configMap:
-          name: nginx-config
-      # Política de seguridad del pod
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        fsGroup: 1000
+---
+# SERVICE INCLUIDO EN EL MISMO ARCHIVO
+apiVersion: v1
+kind: Service
+metadata:
+  name: mi-app-service
+spec:
+  selector:
+    app: mi-app
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP
