@@ -22,9 +22,9 @@ spec:
     spec:
       containers:
       - name: mi-app
-        image: olaff33/mi-web:2.0
+        image: olaff33/mi-cicd:1.0
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         env:
         - name: ENVIRONMENT
           value: "production"
@@ -65,3 +65,4 @@ spec:
           runAsNonRoot: true
           runAsUser: 1000
           allowPrivilegeEscalation: false
+
