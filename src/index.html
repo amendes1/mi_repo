@@ -1,0 +1,90 @@
+@"
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Mi App CI/CD - amendes1</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 600px;
+        }
+        h1 { 
+            font-size: 2.5em; 
+            margin-bottom: 10px;
+        }
+        .user-badge {
+            background: #FF6B6B;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin: 10px 0;
+            display: inline-block;
+        }
+        .status {
+            background: #4CAF50;
+            padding: 10px 20px;
+            border-radius: 25px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .pipeline-info {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            text-align: left;
+        }
+        .version {
+            color: #FFD93D;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="user-badge">👤 GitHub: amendes1</div>
+        <h1>🎯 CI/CD Pipeline Activo</h1>
+        <p>Despliegue automático con GitHub Actions + ArgoCD</p>
+        
+        <div class="status">🚀 STATUS: DEPLOYED SUCCESSFULLY</div>
+        
+        <div class="pipeline-info">
+            <h3>🔧 Pipeline Execution:</h3>
+            <ul>
+                <li>✅ Code pushed to GitHub</li>
+                <li>✅ GitHub Actions triggered</li>
+                <li>✅ Docker image built & pushed</li>
+                <li>✅ ArgoCD auto-synchronized</li>
+                <li>✅ Kubernetes deployment successful</li>
+            </ul>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <p><strong>Version:</strong> <span class="version">2.0.0</span></p>
+            <p><strong>Deployed:</strong> <span id="timestamp"></span></p>
+            <p><strong>Environment:</strong> Production</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>
+"@ | Out-File -FilePath "src/index.html" -Encoding UTF8
