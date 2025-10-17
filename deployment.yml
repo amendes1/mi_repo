@@ -7,7 +7,7 @@ metadata:
     app: mi-app
     version: "2.0.0"
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: mi-app
@@ -63,3 +63,4 @@ spec:
           runAsNonRoot: true
           runAsUser: 1000
           allowPrivilegeEscalation: false
+
