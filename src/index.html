@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 App Completa CI/CD</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Pipeline CI/CD Completo</h1>
+            <p>Namespace + Deployment + Service + Ingress</p>
+        </header>
+        
+        <div class="status-board">
+            <div class="status-card">
+                <h3>📦 Namespace</h3>
+                <div class="status-value" id="namespace">mi-app-production</div>
+            </div>
+            <div class="status-card">
+                <h3>🔧 Deployment</h3>
+                <div class="status-value">3 Replicas</div>
+            </div>
+            <div class="status-card">
+                <h3>🔗 Service</h3>
+                <div class="status-value">ClusterIP</div>
+            </div>
+            <div class="status-card">
+                <h3>🌐 Ingress</h3>
+                <div class="status-value">mi-app.local</div>
+            </div>
+        </div>
+
+        <div class="pipeline-info">
+            <h2>🔄 Pipeline Steps</h2>
+            <ol>
+                <li>✅ GitHub Push</li>
+                <li>✅ Docker Build & Test</li>
+                <li>✅ Security Scan</li>
+                <li>✅ Image Push</li>
+                <li>✅ ArgoCD Sync</li>
+                <li>✅ Kubernetes Deploy</li>
+            </ol>
+        </div>
+
+        <div class="app-info">
+            <h3>📊 Application Info</h3>
+            <p><strong>Pod:</strong> <span id="pod-name">Loading...</span></p>
+            <p><strong>Version:</strong> 2.0.0</p>
+            <p><strong>Environment:</strong> Production</p>
+            <p><strong>Deployed:</strong> <span id="timestamp"></span></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+        document.getElementById('pod-name').textContent = window.location.hostname;
+    </script>
+</body>
+</html>
