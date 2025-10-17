@@ -1,34 +1,65 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mi-app-cicd
-  namespace: mi-namespace
+  name: mi-app
+  namespace: mi-app-production
+  labels:
+    app: mi-app
+    version: "2.0.0"
 spec:
-  revisionHistoryLimit: 2
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: mi-app-cicd
+      app: mi-app
   template:
     metadata:
       labels:
-        app: mi-app-cicd
+        app: mi-app
+      annotations:
+        build.version: "2.0.0"
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "80"
     spec:
       containers:
-      - name: nginx
-        image: olaff33/mi-app:2.2
+      - name: mi-app
+        image: olaff33/mi-web:2.0
         ports:
         - containerPort: 80
-
-
-
-
-
-
-
-
-
-
-
-
-
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        - name: VERSION
+          value: "2.0.0"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
