@@ -15,10 +15,11 @@ spec:
     spec:
       containers:
       - name: mi-app
-        image: olaff33/mi-app:2.2
+        image: nginx:alpine
         ports:
         - containerPort: 80           # ← Puerto por defecto de nginx
         resources:
           requests:
             memory: "64Mi"
             cpu: "50m"
+
