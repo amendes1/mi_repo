@@ -1,24 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mi-app
+  name: mi-app-cicd
   namespace: mi-namespace
 spec:
   revisionHistoryLimit: 2
   replicas: 1
   selector:
     matchLabels:
-      app: mi-app
+      app: mi-app-cicd
   template:
     metadata:
       labels:
-        app: mi-app
+        app: mi-app-cicd
     spec:
       containers:
       - name: nginx
         image: olaff33/mi-app:2.2
         ports:
         - containerPort: 80
+
 
 
 
