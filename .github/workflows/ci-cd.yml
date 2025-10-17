@@ -8,7 +8,7 @@ on:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/mi-web
+  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/mi-cicd
 
 jobs:
   build-and-test:
