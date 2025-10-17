@@ -1,4 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: mi-namespace
+  name: mi-app-production
+  labels:
+    name: mi-app-production
+    environment: production
