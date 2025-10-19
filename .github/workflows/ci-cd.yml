@@ -1,0 +1,16 @@
+name: 🚀 CI/CD Simple
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🎉 Deploy Automático
+        run: |
+          echo "✅ CI/CD ACTIVADO"
+          echo "📦 Commit: ${{ github.sha }}"
+          echo "👤 Por: ${{ github.actor }}"
+          echo "🚀 ArgoCD sincronizará automáticamente"
