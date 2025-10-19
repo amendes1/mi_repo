@@ -2,9 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mi-app
-  namespace: mi-app-production
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: mi-app
@@ -14,12 +13,14 @@ spec:
         app: mi-app
     spec:
       containers:
-      - name: mi-app
+      - name: nginx
         image: nginx:alpine
         ports:
-        - containerPort: 80           # ← Puerto por defecto de nginx
+        - containerPort: 80
         resources:
           requests:
             memory: "64Mi"
             cpu: "50m"
-
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
