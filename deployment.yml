@@ -1,20 +1,12 @@
----
-# 1. CONFIGMAP básico
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: app-config
-data:
-  environment: "development"
-  app-name: "Mi App Simple"
----
-# 2. DEPLOYMENT con imagen de Docker Hub
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mi-app
+  namespace: mi-app
+  labels:
+    app: mi-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: mi-app
@@ -24,47 +16,29 @@ spec:
         app: mi-app
     spec:
       containers:
-      - name: app
-        image: olaff33/mi-app:2.0
+      - name: mi-app
+        image: olaff33/mi_app:latest
         ports:
         - containerPort: 80
         env:
         - name: ENVIRONMENT
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: environment
-        - name: APP_NAME  
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: app-name
----
-# 3. SERVICE básico
-apiVersion: v1
-kind: Service
-metadata:
-  name: mi-app-service
-spec:
-  selector:
-    app: mi-app
-  ports:
-  - port: 80
-    targetPort: 80
----
-# 4. INGRESS simple
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: mi-app-ingress
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: mi-app-service
-            port:
-              number: 80
+          value: "production"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
