@@ -1,20 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mi-app
+  name: app-urgente
+  labels:
+    app: app-urgente
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: mi-app
+      app: app-urgente
   template:
     metadata:
       labels:
-        app: mi-app
+        app: app-urgente
     spec:
       containers:
-      - name: nginx
-        image: nginx:alpine
+      - name: app
+        image: nginx:alpine  # Imagen oficial que SIEMPRE funciona
         ports:
         - containerPort: 80
         resources:
