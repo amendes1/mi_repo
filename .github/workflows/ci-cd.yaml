@@ -40,7 +40,7 @@ jobs:
         env:
           KUBECONFIG: $GITHUB_WORKSPACE/kubeconfig
         run: |
-          echo "📦 Aplicando Deployment y Service con imagen olaff33/mi-app:2.0"
+          echo "📦 Aplicando Deployment y Service con imagen olaff33/mi-app:latest"
           kubectl apply -f deployment.yaml
           kubectl apply -f service.yaml
           kubectl get pods
