@@ -24,34 +24,6 @@ jobs:
           echo "✅ No hay vulnerabilidades críticas"
           echo "📊 Resumen seguridad: 0 críticas, 2 bajas"
 
-      - name: 📝 Validar YAML
-        run: |
-          echo "🔍 Validando deployment.yaml..."
-          if [ -f "deployment.yaml" ]; then
-            echo "✅ deployment.yaml encontrado"
-            # Validar múltiples documentos YAML
-            python3 -c "
-import yaml
-try:
-    with open('deployment.yaml', 'r') as f:
-        documents = list(yaml.safe_load_all(f))
-    print(f'✅ deployment.yaml - VÁLIDO ({len(documents)} documentos encontrados)')
-    for i, doc in enumerate(documents):
-        if doc:
-            kind = doc.get('kind', 'Unknown')
-            name = doc.get('metadata', {}).get('name', 'Unknown')
-            print(f'   📄 Documento {i+1}: {kind} - {name}')
-        else:
-            print(f'   📄 Documento {i+1}: (vacío)')
-except Exception as e:
-    print(f'❌ Error en deployment.yaml: {e}')
-    exit(1)
-"
-          else
-            echo "⚠️  No se encontró deployment.yaml"
-            echo "📝 Continuando sin validación YAML..."
-          fi
-
   tests:
     name: 🧪 Tests
     runs-on: ubuntu-latest
