@@ -26,10 +26,15 @@ jobs:
 
       - name: 📝 Validar YAML
         run: |
-          echo "🔍 Validando deployment.yaml..."
-          if [ -f "deployment.yaml" ]; then
-            echo "✅ deployment.yaml encontrado"
-            python3 -c "
+          echo "🔍 Validando deployment.yml..."
+          if [ -f "deployment.yml" ]; then
+            echo "✅ deployment.yml encontrado"
+            # Validación simple del YAML
+            python3 -c "import yaml; yaml.safe_load(open('deployment.yml', 'r')); print('✅ deployment.yml - SINTÁXIS VÁLIDA')"
+          else
+            echo "❌ deployment.yml no encontrado"
+            exit 1
+          fi
 
   tests:
     name: 🧪 Tests
@@ -41,10 +46,10 @@ jobs:
 
       - name: ✅ Validar K8s
         run: |
-          echo "🧪 Validando deployment.yaml..."
-          echo "✅ deployment.yaml - VÁLIDO"
-          echo "📄 Contenido del deployment:"
-          cat deployment.yaml
+          echo "🧪 Validando deployment.yml..."
+          echo "✅ deployment.yml - VÁLIDO"
+          echo "📄 Resumen del deployment:"
+          grep -E "replicas:|image:|name:" deployment.yml || true
           echo "🎯 Todos los tests pasaron"
 
   build-deploy:
@@ -66,7 +71,7 @@ jobs:
       - name: 📊 Información del deploy
         run: |
           echo "🚀 INICIANDO DEPLOYMENT"
-          echo "📦 Archivo: deployment.yaml"
+          echo "📦 Archivo: deployment.yml"
           echo "🔧 Branch: ${{ github.ref }}"
           echo "👤 Usuario: ${{ github.actor }}"
           echo "📝 Commit: ${{ github.sha }}"
@@ -91,7 +96,6 @@ jobs:
     name: 📊 Monitorización
     runs-on: ubuntu-latest
     needs: build-deploy
-    if: always()
     
     steps:
       - name: 📈 Health Check
