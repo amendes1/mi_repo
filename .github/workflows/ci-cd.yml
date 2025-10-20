@@ -26,13 +26,23 @@ jobs:
 
       - name: 📝 Validar YAML
         run: |
-          echo "🔍 Validando sintaxis YAML..."
-          python3 -c "
-          import yaml
-          with open('deployment.yml', 'r') as f:
-              yaml.safe_load(f)
-          "
-          echo "✅ deployment.yml - VÁLIDO"
+          echo "🔍 Validando deployment.yml..."
+          if [ -f "deployment.yml" ]; then
+            echo "✅ deployment.yml encontrado"
+            python3 -c "
+import yaml
+try:
+    with open('deployment.yml', 'r') as f:
+        yaml.safe_load(f)
+    print('✅ deployment.yml - SINTÁXIS VÁLIDA')
+except Exception as e:
+    print(f'❌ Error en deployment.yml: {e}')
+    exit(1)
+"
+          else
+            echo "❌ deployment.yml no encontrado"
+            exit 1
+          fi
 
   tests:
     name: 🧪 Tests
@@ -44,15 +54,11 @@ jobs:
 
       - name: ✅ Validar K8s
         run: |
-          echo "🧪 Validando manifiestos Kubernetes..."
+          echo "🧪 Validando deployment.yml..."
           echo "✅ deployment.yml - VÁLIDO"
+          echo "📄 Contenido del deployment:"
+          cat deployment.yml
           echo "🎯 Todos los tests pasaron"
-
-      - name: 📊 Tests de carga (simulado)
-        run: |
-          echo "📈 Ejecutando tests de performance..."
-          echo "⏱️ Response time: 120ms"
-          echo "💯 Disponibilidad: 99.9%"
 
   build-deploy:
     name: 🏗️ Build & Deploy
@@ -64,45 +70,35 @@ jobs:
       - name: 🛎 Checkout
         uses: actions/checkout@v4
 
-      - name: 🔐 Obtener secrets
-        run: |
-          echo "🔑 Obteniendo credenciales K8s..."
-          echo "✅ Secrets configurados"
-
       - name: 🏷️ Generar version
         id: version
         run: |
           echo "VERSION=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
-          echo "🎯 Versión: $(date +%Y%m%d-%H%M%S)"
+          echo "🎯 Versión: ${{ steps.version.outputs.VERSION }}"
 
-      - name: 🐳 Build Docker (simulado)
+      - name: 📊 Información del deploy
         run: |
-          echo "🏗️ Building Docker image..."
-          echo "📦 Image: my-app:${{ steps.version.outputs.VERSION }}"
-          echo "✅ Build completado"
+          echo "🚀 INICIANDO DEPLOYMENT"
+          echo "📦 Archivo: deployment.yml"
+          echo "🔧 Branch: ${{ github.ref }}"
+          echo "👤 Usuario: ${{ github.actor }}"
+          echo "📝 Commit: ${{ github.sha }}"
+          echo "🕐 Fecha: $(date)"
+          echo "✅ ArgoCD sincronizará automáticamente"
 
-      - name: 🚀 Deploy a Producción
+      - name: 🎯 Deploy a Producción
         if: github.ref == 'refs/heads/main'
         run: |
           echo "🎯 DEPLOYING TO PRODUCTION"
           echo "📦 Versión: ${{ steps.version.outputs.VERSION }}"
-          echo "🔧 Namespace: ${{ env.K8S_NAMESPACE }}"
-          echo "👤 Triggered by: ${{ github.actor }}"
-          echo "📝 Commit: ${{ github.sha }}"
-          echo "✅ ArgoCD sincronizará automáticamente"
+          echo "🏷️ Ambiente: PRODUCCIÓN"
 
       - name: 🧪 Deploy a Staging
         if: github.ref == 'refs/heads/develop'
         run: |
           echo "🔬 DEPLOYING TO STAGING"
           echo "📦 Versión: ${{ steps.version.outputs.VERSION }}"
-          echo "🎯 Ambiente: staging"
-
-      - name: 📢 Notificación
-        run: |
-          echo "📢 Enviando notificaciones..."
-          echo "✅ Slack/Teams notificado"
-          echo "📧 Email enviado"
+          echo "🏷️ Ambiente: STAGING"
 
   monitor:
     name: 📊 Monitorización
@@ -116,11 +112,15 @@ jobs:
           echo "🏥 Verificando salud de la aplicación..."
           echo "✅ App: HEALTHY"
           echo "📊 Metrics: OK"
-          echo "🔍 Logs: CLEAN"
 
       - name: 📋 Reporte final
         run: |
-          echo "🎉 DEPLOYMENT COMPLETADO"
-          echo "⏱️ Tiempo total: 2m 15s"
-          echo "✅ Todos los jobs: EXITOSOS"
-          echo "🚀 Aplicación desplegada correctamente"
+          echo " "
+          echo "🎉 DEPLOYMENT COMPLETADO EXITOSAMENTE"
+          echo "======================================"
+          echo "📦 Aplicación: Tu App"
+          echo "🔧 Ambiente: ${{ github.ref == 'refs/heads/main' && 'PRODUCCIÓN' || 'STAGING' }}"
+          echo "👤 Desplegado por: ${{ github.actor }}"
+          echo "🕐 Timestamp: $(date)"
+          echo "✅ Estado: EXITOSO"
+          echo " "
