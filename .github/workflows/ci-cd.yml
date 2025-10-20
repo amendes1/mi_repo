@@ -26,21 +26,21 @@ jobs:
 
       - name: 📝 Validar YAML
         run: |
-          echo "🔍 Validando deployment.yml..."
-          if [ -f "deployment.yml" ]; then
-            echo "✅ deployment.yml encontrado"
+          echo "🔍 Validando deployment.yaml..."
+          if [ -f "deployment.yaml" ]; then
+            echo "✅ deployment.yaml encontrado"
             python3 -c "
 import yaml
 try:
-    with open('deployment.yml', 'r') as f:
+    with open('deployment.yaml', 'r') as f:
         yaml.safe_load(f)
-    print('✅ deployment.yml - SINTÁXIS VÁLIDA')
+    print('✅ deployment.yaml - SINTÁXIS VÁLIDA')
 except Exception as e:
-    print(f'❌ Error en deployment.yml: {e}')
+    print(f'❌ Error en deployment.yaml: {e}')
     exit(1)
 "
           else
-            echo "❌ deployment.yml no encontrado"
+            echo "❌ deployment.yaml no encontrado"
             exit 1
           fi
 
@@ -54,10 +54,10 @@ except Exception as e:
 
       - name: ✅ Validar K8s
         run: |
-          echo "🧪 Validando deployment.yml..."
-          echo "✅ deployment.yml - VÁLIDO"
+          echo "🧪 Validando deployment.yaml..."
+          echo "✅ deployment.yaml - VÁLIDO"
           echo "📄 Contenido del deployment:"
-          cat deployment.yml
+          cat deployment.yaml
           echo "🎯 Todos los tests pasaron"
 
   build-deploy:
@@ -79,7 +79,7 @@ except Exception as e:
       - name: 📊 Información del deploy
         run: |
           echo "🚀 INICIANDO DEPLOYMENT"
-          echo "📦 Archivo: deployment.yml"
+          echo "📦 Archivo: deployment.yaml"
           echo "🔧 Branch: ${{ github.ref }}"
           echo "👤 Usuario: ${{ github.actor }}"
           echo "📝 Commit: ${{ github.sha }}"
