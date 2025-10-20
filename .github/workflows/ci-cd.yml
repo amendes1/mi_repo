@@ -26,13 +26,13 @@ jobs:
 
       - name: 📝 Validar YAML
         run: |
-          echo "🔍 Validando sintaxis YAML..."
+          echo "🔍 Validando sintaxis YML..."
           python3 -c "
-          import yaml
-          with open('deployment.yaml', 'r') as f:
+          import yml
+          with open('deployment.yml', 'r') as f:
               yaml.safe_load(f)
           "
-          echo "✅ deployment.yaml - VÁLIDO"
+          echo "✅ deployment.yml - VÁLIDO"
 
   tests:
     name: 🧪 Tests
@@ -45,7 +45,7 @@ jobs:
       - name: ✅ Validar K8s
         run: |
           echo "🧪 Validando manifiestos Kubernetes..."
-          echo "✅ deployment.yaml - VÁLIDO"
+          echo "✅ deployment.yml - VÁLIDO"
           echo "🎯 Todos los tests pasaron"
 
       - name: 📊 Tests de carga (simulado)
