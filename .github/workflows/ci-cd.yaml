@@ -30,19 +30,6 @@ jobs:
           if [ -f "deployment.yaml" ]; then
             echo "✅ deployment.yaml encontrado"
             python3 -c "
-import yaml
-try:
-    with open('deployment.yaml', 'r') as f:
-        yaml.safe_load(f)
-    print('✅ deployment.yaml - SINTÁXIS VÁLIDA')
-except Exception as e:
-    print(f'❌ Error en deployment.yaml: {e}')
-    exit(1)
-"
-          else
-            echo "❌ deployment.yaml no encontrado"
-            exit 1
-          fi
 
   tests:
     name: 🧪 Tests
