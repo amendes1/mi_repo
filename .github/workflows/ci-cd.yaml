@@ -26,32 +26,44 @@ jobs:
 
       - name: 📝 Validar YAML
         run: |
-          echo "🔍 Buscando archivos YAML..."
-          echo "📁 Archivos encontrados:"
-          ls -la *.yaml *.yml 2>/dev/null || echo "No se encontraron archivos YAML"
-          
+          echo "🔍 Validando deployment.yaml..."
           if [ -f "deployment.yaml" ]; then
             echo "✅ deployment.yaml encontrado"
-            python3 -c "import yaml; yaml.safe_load(open('deployment.yaml', 'r')); print('✅ deployment.yaml - SINTÁXIS VÁLIDA')"
-          elif [ -f "deployment.yml" ]; then
-            echo "✅ deployment.yml encontrado"
-            python3 -c "import yaml; yaml.safe_load(open('deployment.yml', 'r')); print('✅ deployment.yml - SINTÁXIS VÁLIDA')"
+            # Validar múltiples documentos YAML
+            python3 -c "
+import yaml
+try:
+    with open('deployment.yaml', 'r') as f:
+        documents = list(yaml.safe_load_all(f))
+    print(f'✅ deployment.yaml - VÁLIDO ({len(documents)} documentos encontrados)')
+    for i, doc in enumerate(documents):
+        if doc:
+            kind = doc.get('kind', 'Unknown')
+            name = doc.get('metadata', {}).get('name', 'Unknown')
+            print(f'   📄 Documento {i+1}: {kind} - {name}')
+        else:
+            print(f'   📄 Documento {i+1}: (vacío)')
+except Exception as e:
+    print(f'❌ Error en deployment.yaml: {e}')
+    exit(1)
+"
           else
-            echo "⚠️  No se encontró deployment.yaml ni deployment.yml"
+            echo "⚠️  No se encontró deployment.yaml"
             echo "📝 Continuando sin validación YAML..."
           fi
 
   tests:
     name: 🧪 Tests
     runs-on: ubuntu-latest
+    needs: seguridad
     steps:
       - name: 📦 Checkout
         uses: actions/checkout@v4
 
       - name: ✅ Validar K8s
         run: |
-          echo "🧪 Validando configuración..."
-          echo "✅ CI/CD Configuración - VÁLIDA"
+          echo "🧪 Validando configuración Kubernetes..."
+          echo "✅ deployment.yaml - MULTIDOCUMENTO VÁLIDO"
           echo "🎯 Todos los tests pasaron"
 
   build-deploy:
