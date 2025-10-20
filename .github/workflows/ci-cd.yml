@@ -26,9 +26,9 @@ jobs:
 
       - name: 📝 Validar YAML
         run: |
-          echo "🔍 Validando sintaxis YML..."
+          echo "🔍 Validando sintaxis YAML..."
           python3 -c "
-          import yml
+          import yaml
           with open('deployment.yml', 'r') as f:
               yaml.safe_load(f)
           "
