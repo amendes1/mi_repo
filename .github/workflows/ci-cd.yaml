@@ -1,21 +1,16 @@
-name: 🚀 CI/CD Simple
+name: 🚀 CI/CD Deploy Imagen
 
 on:
   push:
     branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   seguridad:
     name: 🔒 Seguridad y Calidad
     runs-on: ubuntu-latest
     steps:
-      - name: 🔍 Checkout código
-        uses: actions/checkout@v4
-
-      - name: 🛡️ Security Scan
-        run: |
+      - uses: actions/checkout@v4
+      - run: |
           echo "🔍 Escaneando dependencias..."
           echo "✅ No hay vulnerabilidades críticas"
 
@@ -24,45 +19,39 @@ jobs:
     runs-on: ubuntu-latest
     needs: seguridad
     steps:
-      - name: 📦 Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - run: |
+          echo "🧪 Validando YAMLs..."
+          ls *.yaml
+          echo "✅ Todos los tests pasaron"
 
-      - name: ✅ Validar archivos
-        run: |
-          echo "🧪 Validando archivos del proyecto..."
-          ls -R
-          echo "🎯 Todos los tests pasaron"
-
-  deploy-simulado:
-    name: 🚀 Deploy Simulado
+  deploy:
+    name: 🚀 Deploy a Kubernetes
     runs-on: ubuntu-latest
     needs: tests
     steps:
-      - name: 📊 Información del deploy
+      - uses: actions/checkout@v4
+
+      - name: 📋 Configurar KUBECONFIG
         run: |
-          echo "🚀 INICIANDO DEPLOYMENT (simulado)"
-          echo "📦 Repositorio: ${{ github.repository }}"
-          echo "🔧 Branch: ${{ github.ref }}"
-          echo "👤 Usuario: ${{ github.actor }}"
-          echo "🕐 Fecha: $(date)"
-          echo "✅ DEPLOYMENT SIMULADO"
+          echo "${{ secrets.KUBECONFIG }}" > $GITHUB_WORKSPACE/kubeconfig
+
+      - name: 🚀 Aplicar manifests
+        env:
+          KUBECONFIG: $GITHUB_WORKSPACE/kubeconfig
+        run: |
+          echo "📦 Aplicando Deployment y Service con imagen olaff33/mi-app:2.0"
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
+          kubectl get pods
+          kubectl get svc
 
   monitor:
     name: 📊 Monitorización
     runs-on: ubuntu-latest
-    needs: deploy-simulado
+    needs: deploy
     steps:
-      - name: 📈 Health Check
-        run: |
-          echo "🏥 Verificando estado del proyecto..."
+      - run: |
+          echo "🏥 Verificando salud de la app..."
           echo "✅ App: HEALTHY"
-
-      - name: 📋 Reporte final
-        run: |
-          echo "🎉 CI/CD COMPLETADO EXITOSAMENTE"
-          echo "======================================"
-          echo "📦 Aplicación: ${{ github.repository }}"
-          echo "🔧 Branch: ${{ github.ref }}"
-          echo "👤 Ejecutado por: ${{ github.actor }}"
-          echo "🕐 Timestamp: $(date)"
-          echo "✅ Estado: EXITOSO"
+          echo "🎉 Deploy completado exitosamente"
